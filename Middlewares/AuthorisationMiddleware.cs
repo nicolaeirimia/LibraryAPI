@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LibraryAPI.Classes;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace LibraryAPI.Middlewares

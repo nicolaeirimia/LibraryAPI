@@ -1,4 +1,4 @@
-﻿namespace LibraryAPI
+﻿namespace LibraryAPI.Models
 {
     public class UserCredentials
     {

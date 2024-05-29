@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LibraryAPI
+namespace LibraryAPI.Models
 {
     [Table("tbl_Books")]
     public class Book
     {
         [Key]
-        [Column ("book_id")]
+        [Column("book_id")]
         public int Book_Id { get; set; }
         [Column("title")]
         public string? Title { get; set; }

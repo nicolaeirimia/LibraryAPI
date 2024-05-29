@@ -1,4 +1,6 @@
-﻿namespace LibraryAPI.Contracts
+﻿using LibraryAPI.Models;
+
+namespace LibraryAPI.Contracts
 {
     public interface IBooksRepository : IGenericRepository<Book>
     {

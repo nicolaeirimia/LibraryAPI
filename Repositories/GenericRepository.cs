@@ -5,6 +5,7 @@ using System.Text;
 using Dapper;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using LibraryAPI.Classes;
 
 namespace LibraryAPI.Repositories
 {

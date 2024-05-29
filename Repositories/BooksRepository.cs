@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using LibraryAPI.Contracts;
 using LibraryAPI.Managers;
+using LibraryAPI.Models;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using Newtonsoft.Json;

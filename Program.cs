@@ -1,12 +1,8 @@
-using Dapper;
-using LibraryAPI;
 using LibraryAPI.Contracts;
-using LibraryAPI.Controllers;
+using LibraryAPI.Filters;
 using LibraryAPI.Managers;
 using LibraryAPI.Middlewares;
 using LibraryAPI.Repositories;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using System.Data;
 

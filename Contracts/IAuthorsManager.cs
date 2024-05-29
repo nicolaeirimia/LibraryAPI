@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LibraryAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryAPI.Contracts
 {

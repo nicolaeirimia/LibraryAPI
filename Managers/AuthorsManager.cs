@@ -1,4 +1,5 @@
 ﻿using LibraryAPI.Contracts;
+using LibraryAPI.Models;
 using LibraryAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

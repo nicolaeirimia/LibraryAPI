@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LibraryAPI.Classes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
 
 
-namespace LibraryAPI
+namespace LibraryAPI.Filters
 {
 
 
@@ -13,14 +14,14 @@ namespace LibraryAPI
         {
             if (!context.HttpContext.Request.Headers.ContainsKey("authorisation"))
             {
-                context.Result = new Microsoft.AspNetCore.Mvc.UnauthorizedResult();
+                context.Result = new UnauthorizedResult();
                 return;
             }
 
             var token = context.HttpContext.Request.Headers["authorisation"].ToString().Split(" ").LastOrDefault();
             if (string.IsNullOrEmpty(token) || !TokenStore.ValidateToken(token))
             {
-                context.Result = new Microsoft.AspNetCore.Mvc.UnauthorizedResult();
+                context.Result = new UnauthorizedResult();
                 return;
             }
         }

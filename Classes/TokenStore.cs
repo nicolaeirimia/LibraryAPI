@@ -1,10 +1,10 @@
 ﻿using System.Collections.Concurrent;
 
-namespace LibraryAPI
+namespace LibraryAPI.Classes
 {
     public static class TokenStore
     {
-        private static readonly ConcurrentDictionary<string, DateTime> _tokens = new ();
+        private static readonly ConcurrentDictionary<string, DateTime> _tokens = new();
 
         public static string GenerateToken()
         {
@@ -22,7 +22,7 @@ namespace LibraryAPI
                     return true;
                 }
 
-                _tokens.TryRemove(token, out _); 
+                _tokens.TryRemove(token, out _);
             }
 
             return false;

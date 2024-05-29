@@ -1,4 +1,6 @@
-﻿namespace LibraryAPI
+﻿using LibraryAPI.Models;
+
+namespace LibraryAPI.Classes
 {
     public static class TableNameMapper
     {
