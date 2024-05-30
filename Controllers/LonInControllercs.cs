@@ -10,6 +10,7 @@ namespace LibraryAPI.Controllers
     public class LogInController : ControllerBase
     {
         [HttpPost]
+        [Consumes ("application/xml")]
         public IActionResult LogIn([FromBody] UserCredentials credentials)
         {
             if (credentials.Username == "user" && credentials.Password == "password")

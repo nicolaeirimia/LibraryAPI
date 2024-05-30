@@ -9,7 +9,14 @@ using System.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddXmlSerializerFormatters();
+// Make [Consumes(application/xml)] case sensitive
+builder.Services.AddControllersWithViews().
+                AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

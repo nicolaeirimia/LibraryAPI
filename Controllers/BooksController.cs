@@ -19,9 +19,10 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBooks([FromHeader] string authorisation) => await _booksManager.GetAllBooks();
+        public async Task<IActionResult> GetAllBooks([FromHeader] string authorisation, string type) => await _booksManager.GetAllBooks(type);
 
         [HttpGet("{id:int}")]
+
         public async Task<Book> GetBook([FromHeader] string authorisation, int id) => await _booksManager.GetBook(id);
 
         [HttpPost]

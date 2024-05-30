@@ -23,6 +23,7 @@ namespace LibraryAPI.Controllers
         public async Task<IActionResult> GetAllAuthors([FromHeader] string authorisation) =>await _authorsManager.GetAllAuthors();
 
         [HttpGet("{id:int}")]
+        [Produces("application/xml")]
         public async Task<Author> GetAuthor([FromHeader] string authorisation, int id) => await _authorsManager.GetAuthor(id);
 
         [HttpPost]
@@ -36,6 +37,7 @@ namespace LibraryAPI.Controllers
         public async Task<int> RemoveAuthor([FromHeader] string authorisation, int id) => await _authorsManager.RemoveAuthor(id);
 
         [HttpPut]
+        [Consumes("application/json")]
         public async Task<int> UpdateAutor([FromHeader] string authorisation, Author author) => await _authorsManager.UpdateAuthor(author);
     }
 }

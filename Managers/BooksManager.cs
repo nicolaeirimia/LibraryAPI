@@ -19,27 +19,9 @@ namespace LibraryAPI.Managers
         {
             await _booksRepository.AddFile(file);
         }
-        public async Task<IActionResult> GetAllBooks()
+        public async Task<IActionResult> GetAllBooks(string type)
         {
-            IEnumerable<Book> books = await _booksRepository.GetAll();
-
-            string json = JsonConvert.SerializeObject(books);
-
-            byte[] bytes = Encoding.UTF8.GetBytes(json);
-
-            try
-            {
-                MemoryStream stream = new MemoryStream(bytes);
-                return new FileStreamResult(stream, "application/json")
-                {
-                    FileDownloadName = "all_books.json"
-                };
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Internal server error: {ex.Message}");
-            }
-
+            return await _booksRepository.GetAllBooks(type);
         }
 
         public async Task<Book> GetBook(int id)

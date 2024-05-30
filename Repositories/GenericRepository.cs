@@ -6,6 +6,13 @@ using Dapper;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using LibraryAPI.Classes;
+using System.Formats.Asn1;
+using System.Globalization;
+using System.Xml.Serialization;
+using System.Xml;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Text.RegularExpressions;
 
 namespace LibraryAPI.Repositories
 {
@@ -36,7 +43,7 @@ namespace LibraryAPI.Repositories
         {
             try
             {
-                var query = $"SELECT * FROM {TableName} WHERE {typeof(T).ToString().ToLower()[11..]}_id = @Id";
+                var query = $"SELECT * FROM {TableName} WHERE {typeof(T).ToString().ToLower().Substring(18)}_id = @Id";
                 return await _dbConnection.QueryFirstOrDefaultAsync<T>(query, new { Id = id }) ?? throw new Exception("Doest't Exist");
             }
             catch (Exception ex)
@@ -64,7 +71,7 @@ namespace LibraryAPI.Repositories
         {
             try
             {
-                var deleteQuery = $"DELETE FROM {TableName} WHERE {typeof(T).ToString().ToLower().Substring(11)}_id = @Id";
+                var deleteQuery = $"DELETE FROM {TableName} WHERE {typeof(T).ToString().ToLower().Substring(18)}_id = @Id";
                 return await _dbConnection.ExecuteAsync(deleteQuery, new { Id = id });
             }
             catch (Exception ex)
@@ -96,14 +103,87 @@ namespace LibraryAPI.Repositories
 
             try
             {
-                using (var reader = new StreamReader(file.OpenReadStream()))
+                var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+                switch (fileExtension)
                 {
-                    var jsonContent = await reader.ReadToEndAsync();
-                    var entities = JsonConvert.DeserializeObject<List<T>>(jsonContent);
+                    case ".json":
+                        await ProcessJsonFile(file);
+                        break;
+
+                    case ".csv":
+                        await ProcessCsvFile(file);
+                        break;
+
+                    case ".xml":
+                        await ProcessXmlFile(file);
+                        break;
+
+                    default:
+                        throw new ArgumentException("Unsupported file format. Please upload a JSON, CSV, or XML file.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while handling the file: {ex.Message}");
+            }
+        }
+
+        private async Task ProcessJsonFile(IFormFile file)
+        {
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                var jsonContent = await reader.ReadToEndAsync();
+                var entities = JsonConvert.DeserializeObject<List<T>>(jsonContent);
+
+                if (entities == null || entities.Count == 0)
+                {
+                    throw new ArgumentException($"JSON file doesn't contain valid entries for {typeof(T)} type.");
+                }
+
+                foreach (var entity in entities)
+                {
+                    var insertQuery = GenerateInsertQuery();
+                    await _dbConnection.ExecuteAsync(insertQuery, entity);
+                }
+            }
+        }
+
+        private async Task ProcessCsvFile(IFormFile file)
+        {
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)))
+            {
+                var entities = csv.GetRecords<T>().ToList();
+
+                if (entities == null || entities.Count() == 0)
+                {
+                    throw new ArgumentException($"CSV file doesn't contain valid entries for {typeof(T)} type.");
+                }
+
+                foreach (var entity in entities)
+                {
+                    var insertQuery = GenerateInsertQuery();
+                    await _dbConnection.ExecuteAsync(insertQuery, entity);
+                }
+            }
+        }
+
+        private async Task ProcessXmlFile(IFormFile file)
+        {
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                var xmlContent = await reader.ReadToEndAsync();
+                XmlRootAttribute xRoot = new XmlRootAttribute();
+                xRoot.ElementName = "books";
+                var serializer = new XmlSerializer(typeof(List<T>), xRoot);
+                using (var stringReader = new StringReader(xmlContent))
+                {
+                    var entities = (List<T>)serializer.Deserialize(stringReader);
 
                     if (entities == null || entities.Count() == 0)
                     {
-                        throw new ArgumentException($"JSON file doesnt contain valid entries for {typeof(T)} Type");
+                        throw new ArgumentException($"XML file doesn't contain valid entries for {typeof(T)} type.");
                     }
 
                     foreach (var entity in entities)
@@ -112,10 +192,6 @@ namespace LibraryAPI.Repositories
                         await _dbConnection.ExecuteAsync(insertQuery, entity);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error appeared while handling the JSON: {ex.Message}");
             }
         }
 
