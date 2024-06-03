@@ -1,5 +1,7 @@
 ﻿using LibraryAPI.Contracts;
+using LibraryAPI.Filters;
 using LibraryAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -19,24 +21,24 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBooks([FromHeader] string authorisation, string type) => await _booksManager.GetAllBooks(type);
+        public async Task<IActionResult> GetAllBooks(string type) => await _booksManager.GetAllBooks(type);
 
         [HttpGet("{id:int}")]
 
-        public async Task<Book> GetBook([FromHeader] string authorisation, int id) => await _booksManager.GetBook(id);
+        public async Task<Book> GetBook(int id) => await _booksManager.GetBook(id);
 
         [HttpPost]
-        public async Task<IActionResult> AddBook([FromHeader] string authorisation, IFormFile file)
+        public async Task<IActionResult> AddBook(IFormFile file)
         {
             await _booksManager.AddBook(file);
             return Ok("Books added!");
         }
 
         [HttpPut]
-        public async Task<int> UpdateBook([FromHeader] string authorisation, Book book) => await _booksManager.UpdateBook(book);
+        public async Task<int> UpdateBook(Book book) => await _booksManager.UpdateBook(book);
 
         [HttpDelete("{id}")]
-        public async Task<int> RemoveBook([FromHeader] string authorisation, int id) => await _booksManager.RemoveBook(id);
+        public async Task<int> RemoveBook(int id) => await _booksManager.RemoveBook(id);
 
 
     }

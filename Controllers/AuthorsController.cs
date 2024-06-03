@@ -1,4 +1,5 @@
 ﻿using LibraryAPI.Contracts;
+using LibraryAPI.Filters;
 using LibraryAPI.Managers;
 using LibraryAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -20,24 +21,24 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAuthors([FromHeader] string authorisation) =>await _authorsManager.GetAllAuthors();
+        public async Task<IActionResult> GetAllAuthors() => await _authorsManager.GetAllAuthors();
 
         [HttpGet("{id:int}")]
-        [Produces("application/xml")]
-        public async Task<Author> GetAuthor([FromHeader] string authorisation, int id) => await _authorsManager.GetAuthor(id);
+        [Produces("application/xml", "application/json")]
+        public async Task<Author> GetAuthor(int id) => await _authorsManager.GetAuthor(id);
 
         [HttpPost]
-        public async Task<IActionResult> AddAuthor([FromHeader] string authorisation, IFormFile file)
+        public async Task<IActionResult> AddAuthor(IFormFile file)
         {
             await _authorsManager.AddAuthor(file);
-            return Ok("Books added!");
+            return Ok("Authors added!");
         }
 
         [HttpDelete("{id}")]
-        public async Task<int> RemoveAuthor([FromHeader] string authorisation, int id) => await _authorsManager.RemoveAuthor(id);
+        public async Task<int> RemoveAuthor(int id) => await _authorsManager.RemoveAuthor(id);
 
         [HttpPut]
         [Consumes("application/json")]
-        public async Task<int> UpdateAutor([FromHeader] string authorisation, Author author) => await _authorsManager.UpdateAuthor(author);
+        public async Task<int> UpdateAutor(Author author) => await _authorsManager.UpdateAuthor(author);
     }
 }
