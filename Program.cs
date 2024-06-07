@@ -1,3 +1,4 @@
+using LibraryAPI.Classes;
 using LibraryAPI.Contracts;
 using LibraryAPI.Filters;
 using LibraryAPI.Managers;
@@ -19,7 +20,11 @@ builder.Services.AddControllersWithViews().
                 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+
+    options.OperationFilter<TokenRequiredParameter>()
+    
+    );
 
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("Default");
@@ -30,6 +35,10 @@ builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
 builder.Services.AddScoped<IBooksManager, BooksManager>();
 builder.Services.AddScoped<IAuthorsManager, AuthorsManager>();
+builder.Services.AddHttpClient<IMyApiClient, MyApiClient>(client =>
+{
+    client.BaseAddress = new Uri("https://openlibrary.org/search.json");
+});
 
 
 

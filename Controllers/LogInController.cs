@@ -18,7 +18,6 @@ namespace LibraryAPI.Controllers
             {
                 var token = TokenStore.GenerateToken();
 
-                Request.Headers.Append("authorisation", token);
 
 
                 return Ok(new { token });

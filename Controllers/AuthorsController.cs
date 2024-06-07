@@ -24,7 +24,7 @@ namespace LibraryAPI.Controllers
         public async Task<IActionResult> GetAllAuthors() => await _authorsManager.GetAllAuthors();
 
         [HttpGet("{id:int}")]
-        [Produces("application/xml", "application/json")]
+        [Produces("application/json")]
         public async Task<Author> GetAuthor(int id) => await _authorsManager.GetAuthor(id);
 
         [HttpPost]
