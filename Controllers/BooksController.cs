@@ -1,8 +1,7 @@
 ﻿using LibraryAPI.Contracts;
-using LibraryAPI.Filters;
 using LibraryAPI.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 
 namespace LibraryAPI.Controllers
@@ -43,14 +42,16 @@ namespace LibraryAPI.Controllers
         public async Task<int> RemoveBook(int id) => await _booksManager.RemoveBook(id);
 
         [HttpGet("open-library")]
-        public async Task<IActionResult> GetBookOnline(string Book_Name) {
+        public async Task<IActionResult> GetBookOnline(string Book_Name)
+        {
 
             var response = await _myApiClient.GetBookAsync(Book_Name);
 
-            var content = await response.Content.ReadAsStringAsync();
+            var byteArray = await response.Content.ReadAsByteArrayAsync();
+            var content = Encoding.UTF8.GetString(byteArray, 0, byteArray.Length);
             return Ok(content);
 
-        } 
+        }
 
 
     }
